@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Omnishare - Login/Register</title>
+  <link rel="stylesheet" href="Omni_Design.css">
+</head>
+<body>
+  <div class="container">
+    <div class="tab-buttons">
+      <button id="loginTab" onclick="showForm('login')">Login</button>
+      <button id="registerTab" onclick="showForm('register')">Register</button>
+    </div>
+
+    <!-- Login Form -->
+<form id="loginForm" class="form" onsubmit="login(event)">
+  <h2>Login</h2>
+  <input type="text" placeholder="Email or Username" required>
+  <input type="password" placeholder="Password" required>
+  <label><input type="checkbox"> Remember me</label>
+  <button type="submit">Login</button>
+  <p>Don't have an account? <a href="#" onclick="showForm('register')">Sign Up</a></p>
+</form>
+
+
+    <!-- Register Form -->
+    <form id="registerForm" class="form hidden" onsubmit="return false">
+      <h2>Register</h2>
+      <input type="text" placeholder="Username" required>
+      <input type="email" placeholder="Email" required>
+      <input type="password" placeholder="Password" required>
+      <input type="password" placeholder="Confirm Password" required>
+      <label><input type="checkbox" required> I accept the terms & conditions</label>
+      <button type="submit">Register</button>
+      <p>Already have an account? <a href="#" onclick="showForm('login')">Login</a></p>
+    </form>
+  </div>
+
+  <script>
+    function showForm(form) {
+      document.getElementById("loginForm").classList.add("hidden");
+      document.getElementById("registerForm").classList.add("hidden");
+      document.getElementById("loginTab").classList.remove("active");
+      document.getElementById("registerTab").classList.remove("active");
+
+      if (form === "login") {
+        document.getElementById("loginForm").classList.remove("hidden");
+        document.getElementById("loginTab").classList.add("active");
+      } else {
+        document.getElementById("registerForm").classList.remove("hidden");
+        document.getElementById("registerTab").classList.add("active");
+      }
+    }
+
+    // Show login by default
+    showForm('login');
+  </script>
+ <script>
+  function showForm(form) {
+    document.getElementById("loginForm").classList.add("hidden");
+    document.getElementById("registerForm").classList.add("hidden");
+    document.getElementById("loginTab").classList.remove("active");
+    document.getElementById("registerTab").classList.remove("active");
+
+    if (form === "login") {
+      document.getElementById("loginForm").classList.remove("hidden");
+      document.getElementById("loginTab").classList.add("active");
+    } else {
+      document.getElementById("registerForm").classList.remove("hidden");
+      document.getElementById("registerTab").classList.add("active");
+    }
+  }
+
+  // Redirect simulation for login
+  function login(event) {
+    event.preventDefault(); // Prevent form submission
+    // Here you'd normally check credentials
+    window.location.href = "omni_upload.html"; // Redirect after login
+  }
+
+  // Show login by default
+  showForm('login');
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  VITE_SUPABASE_URL = "yhttps://bmpwuzdrfekguqaddxot.supabase.co"
+  VITE_SUPABASE_KEY = "yeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJtcHd1emRyZmVrZ3VxYWRkeG90Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk2MDgxOTksImV4cCI6MjA2NTE4NDE5OX0.EtVs2Wk6_wxVbd87DvR-dS5B3I50Ct3bqrasL-lW-0c"
+
+[[redirects]]
+from = "/*"
+to = "index.html"
+status = 200
