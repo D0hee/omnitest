@@ -267,6 +267,9 @@ export function copyLink() {
 
 // Initialize event listeners
 export function setupEventListeners() {
+  document.getElementById('loginForm').addEventListener('submit', login);
+  document.getElementById('registerForm').addEventListener('submit', register);
+  document.querySelector('.logout-btn').addEventListener('click', logout);
   // File input
   const fileInput = document.getElementById('fileInput');
   if (fileInput) {
@@ -293,22 +296,23 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load user profile data
 async function loadUserProfile() {
   const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+  
   const { data: profile, error } = await supabase
     .from('profiles')
     .select('username, storage_used')
     .eq('id', user.id)
     .single();
   
-  if (!error && profile) {
-    document.getElementById('userProfile').innerText = profile.username;
-    document.getElementById('storageUsed').innerText = `${Math.round(profile.storage_used / 1024 / 1024)} MB used`;
+  if (error) {
+    console.error('Profile load error:', error);
+    return;
   }
+  
+  // Update UI elements
 }
 
 window.showForm = showForm;
-window.login = login;
-window.register = register;
-window.logout = logout;
 window.copyLink = copyLink;
 
 });
