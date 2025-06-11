@@ -96,78 +96,9 @@
   <script>
   
   // Initialize Supabase
-  const SUPABASE_URL = 'https://jljhoeckswnxzjbzpmex.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsamhvZWNrc3dueHpqYnpwbWV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk2MTMzMDcsImV4cCI6MjA2NTE4OTMwN30.V1A2lGGznTUGrZhE3XLeeREOrYChl--wOPIUHjoxJ_A';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
   const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  // Show login/register forms
-  function showForm(form) {
-    const loginForm = document.getElementById("loginForm");
-    const registerForm = document.getElementById("registerForm");
-    const loginTab = document.getElementById("loginTab");
-    const registerTab = document.getElementById("registerTab");
-    const container = document.querySelector(".container");
-
-    loginForm.classList.add("hidden");
-    registerForm.classList.add("hidden");
-    loginTab.classList.remove("active");
-    registerTab.classList.remove("active");
-    container.classList.remove("active-form");
-
-    if (form === "login") {
-      loginForm.classList.remove("hidden");
-      loginTab.classList.add("active");
-    } else {
-      registerForm.classList.remove("hidden");
-      registerTab.classList.add("active");
-    }
-
-    container.classList.add("active-form");
-  }
-
-  // Handle login
-  async function login(event) {
-    event.preventDefault();
-  
-    const email = document.querySelector('#loginForm input[type="text"]').value;
-    const password = document.querySelector('#loginForm input[type="password"]').value;
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) {
-      alert(`Login failed: ${error.message}`);
-    } else {
-      document.getElementById('authSection').classList.add('hidden');
-      document.getElementById('fileSection').classList.remove('hidden');
-    }
-  }
-
-  // Handle registration
-  async function register(event) {
-  event.preventDefault();
-  
-  const username = document.querySelector('#registerForm input[type="text"]').value;
-  const email = document.querySelector('#registerForm input[type="email"]').value;
-  const password = document.querySelector('#registerForm input[type="password"]').value;
-
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: { username }
-    }
-  });
-
-  if (error) {
-    alert(`Registration failed: ${error.message}`);
-  } else {
-    alert('Registration successful! Check your email for confirmation.');
-    showForm('login');
-  }
-}
 
   // Handle logout
   async function logout() {
