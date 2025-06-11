@@ -94,11 +94,93 @@
 
   <!-- JavaScript -->
   <script>
+
+  // Show login/register forms
+  function showForm(form) {
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const loginTab = document.getElementById("loginTab");
+    const registerTab = document.getElementById("registerTab");
+    const container = document.querySelector(".container");
+
+    loginForm.classList.add("hidden");
+    registerForm.classList.add("hidden");
+    loginTab.classList.remove("active");
+    registerTab.classList.remove("active");
+    container.classList.remove("active-form");
+
+    if (form === "login") {
+      loginForm.classList.remove("hidden");
+      loginTab.classList.add("active");
+    } else {
+      registerForm.classList.remove("hidden");
+      registerTab.classList.add("active");
+    }
+
+    container.classList.add("active-form");
+  }
+
+  // Handle login
+  async function login(event) {
+    event.preventDefault();
   
-  // Initialize Supabase
-  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const email = document.querySelector('#loginForm input[type="text"]').value;
+    const password = document.querySelector('#loginForm input[type="password"]').value;
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      alert(`Login failed: ${error.message}`);
+    } else {
+      document.getElementById('authSection').classList.add('hidden');
+      document.getElementById('fileSection').classList.remove('hidden');
+    }
+  }
+
+  // Handle registration
+  export async function register(event) {
+  event.preventDefault();
+  
+  const username = document.querySelector('#registerForm input[placeholder="Username"]').value;
+  const email = document.querySelector('#registerForm input[placeholder="Email"]').value;
+  const password = document.querySelector('#registerForm input[type="password"]').value;
+  const confirmPassword = document.querySelector('#registerForm input[type="password"] + input[type="password"]').value;
+
+  if (password !== confirmPassword) {
+    alert("Passwords don't match");
+    return;
+  }
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { username }
+    }
+  });
+
+  if (error) {
+    alert(`Registration failed: ${error.message}`);
+  } else {
+    // Create profile after registration
+    const { error: profileError } = await supabase.from('profiles').insert({
+      id: data.user.id,
+      username: username,
+      storage_used: 0,
+      files_uploaded: 0
+    });
+
+    if (profileError) {
+      console.error("Profile creation error:", profileError);
+    }
+
+    alert('Registration successful! Check your email for confirmation.');
+    showForm('login');
+  }
+}
 
   // Handle logout
   async function logout() {
