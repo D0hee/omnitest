@@ -1,0 +1,149 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f0f4ff;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 400px;
+  margin: 60px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: box-shadow 0.3s ease, border 0.3s ease;
+}
+
+.container.active-form {
+  border: 2px solid #007bff;
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
+}
+
+.hidden {
+  display: none;
+}
+
+h1.brand {
+  text-align: center;
+  color: #007bff;
+  margin-bottom: 30px;
+}
+
+h2 {
+  margin: 20px 0;
+  color: #007bff;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+  width: 100%;
+  margin: 10px 0;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+button {
+  width: 100%;
+  background-color: #007bff;
+  color: #fff;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.upload-box {
+  border: 2px dashed #007bff;
+  text-align: center;
+  padding: 30px;
+  color: #007bff;
+  cursor: pointer;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.link-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.file-details p {
+  margin: 5px 0;
+  text-align: left;
+}
+
+.tab-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab-buttons button {
+  flex: 1;
+  background-color: #f0f0f0;
+  color: #555;
+  border-radius: 20px;
+  font-weight: bold;
+  border: none;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.tab-buttons button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.success-message {
+  color: green;
+  display: none;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.logout-btn {
+  background-color: #dc3545;
+  color: #fff;
+  margin-top: 10px;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+label input[type="checkbox"] {
+  margin-right: 10px;
+  transform: scale(1.2);
+}
+
+p {
+  font-size: 14px;
+  color: #555;
+  margin-top: 15px;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
