@@ -50,8 +50,8 @@
             <h2 class="text-3xl font-bold text-center text-blue-600 mb-8">Login</h2>
             <form id="loginActualForm" onsubmit="handleLogin(event)">
                 <div class="mb-6">
-                    <label for="loginEmail" class="block text-gray-700 text-sm font-medium mb-2">Email</label>
-                    <input type="email" id="loginEmail" name="email" placeholder="Enter your email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
+                    <label for="loginUsername" class="block text-gray-700 text-sm font-medium mb-2">Username</label>
+                    <input type="text" id="loginUsername" name="username" placeholder="Enter your username" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
                 </div>
                 <div class="mb-6">
                     <label for="loginPassword" class="block text-gray-700 text-sm font-medium mb-2">Password</label>
@@ -62,6 +62,7 @@
                         <input type="checkbox" id="rememberMe" name="rememberMe" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                         <label for="rememberMe" class="ml-2 block text-sm text-gray-900">Remember Me</label>
                     </div>
+                    <!-- 'Forgot Password?' removed as per request -->
                 </div>
                 <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-200">Login</button>
 
@@ -107,7 +108,7 @@
         const loginForm = document.getElementById('loginForm');
         const registerForm = document.getElementById('registerForm');
         const signupLink = document.getElementById('signupLink');
-        const loginLink = document.getElementById('loginLink');
+        const loginLink = document.getElementById('loginLink'); // New: Reference to the login link in register form
 
         // Function to show a specific form and activate its tab
         function showForm(formToShow) {
@@ -140,22 +141,35 @@
             showForm(registerForm); // Switch to the register form
         });
 
-        // Event listener for "Already have an account? Login" link in register form
+        // New: Event listener for "Already have an account? Login" link in register form
         loginLink.addEventListener('click', (event) => {
             event.preventDefault(); // Prevent default link behavior
             showForm(loginForm); // Switch to the login form
         });
 
+        const { data, error } = await supabase.auth.signUp({
+              email: email,
+              password: password,
+              options: {
+                data: { username: username }
+              }
+            });
+
+            if (error) {
+              alert('Registration failed: ' + error.message);
+              return;
+
         // Function to handle login form submission
         async function handleLogin(event) {
             event.preventDefault(); // Prevent default form submission
-            const email = document.getElementById('loginEmail').value;
+            const email = document.getElementById('loginEmail').value; // Changed to email
             const password = document.getElementById('loginPassword').value;
-            // const rememberMe = document.getElementById('rememberMe').checked; // You might want to handle this with Supabase sessions
+            const rememberMe = document.getElementById('rememberMe').checked;
 
+        // Actual login implementation
             const { data, error } = await supabase.auth.signInWithPassword({
                 email: email,
-                password: password,
+                password: password
             });
 
             if (error) {
@@ -163,11 +177,10 @@
                 return;
             }
 
-            // If login is successful, you might want to redirect the user
-            alert('Login successful! You can now proceed to Omnishare.');
-            // Example: Redirect to your omni_upload.html page or dashboard
+            // Login successful - redirect to upload page
             window.location.href = 'omni_upload.html';
         }
+
 
         // Function to handle registration form submission
         async function handleRegister(event) {
@@ -187,7 +200,7 @@
                 email: email,
                 password: password,
                 options: {
-                   data: { username: username } // Store username in user metadata
+                    data: { username: username }
                 }
             });
 
@@ -196,12 +209,9 @@
                 return;
             }
 
-            // Supabase's signUp often requires email confirmation.
-            // The user will receive an email to confirm their account.
-            // After confirmation, they can log in.
             alert('Registration successful! Please check your email to confirm your account.');
-            showForm(loginForm); // Optionally switch to login form after successful registration
+            showForm(loginForm);
         }
+    }
     </script>
 </body>
-</html>
