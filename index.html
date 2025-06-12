@@ -165,11 +165,6 @@
             const username = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
             const rememberMe = document.getElementById('rememberMe').checked;
-            const { data, error } = await supabase.auth.signInWithPassword({
-                  email: username, // or email depending on what user enters
-                  password: password,
-            });
-
 
             console.log('Login Attempt:');
             console.log('Username:', username);
@@ -191,32 +186,34 @@
         }
 
         // Function to handle registration form submission
-        function handleRegister(event) {
+        async function handleRegister(event) {
             event.preventDefault(); // Prevent default form submission
+
             const username = document.getElementById('registerUsername').value;
             const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
-            const termsAccepted = document.getElementById('termsAndConditions').checked; // New: Get terms checkbox state
-
-            console.log('Registration Attempt:');
-            console.log('Username:', username);
-            console.log('Email:', email);
-            console.log('Password:', password); // In a real app, do not log passwords!
-            console.log('Terms Accepted:', termsAccepted); // New: Log terms acceptance
+            const termsAccepted = document.getElementById('termsAndConditions').checked;
 
             if (!termsAccepted) {
                 alert('You must accept the terms & conditions to register.');
-                return; // Stop the function if terms are not accepted
+                return;
             }
 
-            // Here you would typically send this data to a server for user registration
-            // For this example, we'll just show an alert.
-            // In a real application, you'd integrate with a backend service.
-            alert('Registration attempted for ' + username + '. (This is a demo, no actual registration)');
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                   data: { username: username }
+                }
+            });
 
-            // You might want to clear the form or redirect to login on success
-            // document.getElementById('registerActualForm').reset();
-            // showForm(loginForm); // Optionally switch to login after successful registration
+            if (error) {
+                alert('Registration failed: ' + error.message);
+                return;
+            }
+
+            alert('Registration successful! Please check your email to confirm your account.');
+            showForm(loginForm);
         }
     </script>
 </body>
