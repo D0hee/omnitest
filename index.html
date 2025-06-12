@@ -146,24 +146,6 @@
             event.preventDefault(); // Prevent default link behavior
             showForm(loginForm); // Switch to the login form
         });
-
-        const { data, error } = await supabase.auth.signUp({
-              email: email,
-              password: password,
-              options: {
-                data: { username: username }
-              }
-            });
-
-            if (error) {
-              alert('Registration failed: ' + error.message);
-              return;
-                
-        signupLink.addEventListener('click', (event) => {
-            event.preventDefault();
-            showForm(registerForm);
-        });
-
         // Function to handle login form submission
         async function handleLogin(event) {
             event.preventDefault(); // Prevent default form submission
@@ -216,6 +198,11 @@
                 alert('Registration failed: ' + error.message);
                 return;
             }
+            
+            signupLink.addEventListener('click', (event) => {
+                event.preventDefault();
+                showForm(registerForm);
+            });    
 
             alert('Registration successful! Please check your email to confirm your account.');
             showForm(loginForm);
