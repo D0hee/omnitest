@@ -6,6 +6,11 @@
   <title>Omnishare - File Sharing</title>
   <link rel="stylesheet" href="design.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://jljhoeckswnxzjbzpmex.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsamhvZWNrc3dueHpqYnpwbWV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk2MTMzMDcsImV4cCI6MjA2NTE4OTMwN30.V1A2lGGznTUGrZhE3XLeeREOrYChl--wOPIUHjoxJ_A';
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  </script>
 </head>
 <body>
   <!-- Auth Section -->
@@ -86,10 +91,6 @@
 
   <!-- JavaScript -->
   <script>
-    const SUPABASE_URL = 'https://jljhoeckswnxzjbzpmex.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsamhvZWNrc3dueHpqYnpwbWV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk2MTMzMDcsImV4cCI6MjA2NTE4OTMwN30.V1A2lGGznTUGrZhE3XLeeREOrYChl--wOPIUHjoxJ_A';
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
     function showForm(form) {
       const loginForm = document.getElementById("loginForm");
       const registerForm = document.getElementById("registerForm");
