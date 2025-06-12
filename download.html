@@ -8,6 +8,26 @@
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsamhvZWNrc3dueHpqYnpwbWV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk2MTMzMDcsImV4cCI6MjA2NTE4OTMwN30.V1A2lGGznTUGrZhE3XLeeREOrYChl--wOPIUHjoxJ_A';
     const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    async function downloadFile(token) {
+      const { data: fileData, error: fileError } = await supabase
+        .from('files')
+        .select()
+        .eq('token', token)
+        .single();
+    
+      if (fileError || !fileData) throw new Error('File not found');
+      if (new Date(fileData.expires_at) < new Date()) throw new Error('File expired');
+
+      const { data: urlData } = supabase.storage
+        .from('files')
+        .getPublicUrl(fileData.storage_path);
+    
+      return {
+        url: urlData.publicUrl,
+        name: fileData.original_name
+      };
+    }
+
     async function initDownload() {
       const urlParams = new URLSearchParams(window.location.search);
       const token = urlParams.get('token');
