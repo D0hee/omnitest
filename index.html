@@ -162,10 +162,22 @@
             // Here you would typically send this data to a server for authentication
             // For this example, we'll just show an alert.
             // In a real application, you'd integrate with a backend service.
-            alert('Login attempted for ' + username + '. (This is a demo, no actual login)');
+            const { data, error } = await supabase.auth.signUp({
+              email: email,
+              password: password,
+              options: {
+                data: { username: username }
+              }
+            });
 
-            // You might want to clear the form or redirect on success
-            // document.getElementById('loginActualForm').reset();
+            if (error) {
+              alert('Registration failed: ' + error.message);
+              return;
+            }
+
+            alert('Registration successful! Please check your email to confirm your account.');
+            // Optionally switch to login form:
+            showForm(loginForm);
         }
 
         // Function to handle registration form submission
