@@ -147,12 +147,29 @@
             showForm(loginForm); // Switch to the login form
         });
 
+        const { data, error } = await supabase.auth.signUp({
+              email: email,
+              password: password,
+              options: {
+                data: { username: username }
+              }
+            });
+
+            if (error) {
+              alert('Registration failed: ' + error.message);
+              return;
+
         // Function to handle login form submission
         function handleLogin(event) {
             event.preventDefault(); // Prevent default form submission
             const username = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
             const rememberMe = document.getElementById('rememberMe').checked;
+            const { data, error } = await supabase.auth.signInWithPassword({
+                  email: username, // or email depending on what user enters
+                  password: password,
+            });
+
 
             console.log('Login Attempt:');
             console.log('Username:', username);
@@ -162,6 +179,10 @@
             // Here you would typically send this data to a server for authentication
             // For this example, we'll just show an alert.
             // In a real application, you'd integrate with a backend service.
+            if (error) {
+              alert('Login failed: ' + error.message);
+              return;
+            }
             }
 
             alert('Registration successful! Please check your email to confirm your account.');
