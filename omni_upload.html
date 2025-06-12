@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omnishare</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        const supabaseUrl = 'https://jljhoeckswnxzjbzpmex.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsamhvZWNrc3dueHpqYnpwbWV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk2MTMzMDcsImV4cCI6MjA2NTE4OTMwN30.V1A2lGGznTUGrZhE3XLeeREOrYChl--wOPIUHjoxJ_Ayour-anon-key';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to the top */
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            padding: 30px;
+        }
+        .header-button {
+            background-color: #4285f4; /* Google Blue */
+            color: white;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px rgba(66, 133, 244, 0.3);
+        }
+        .drop-area {
+            border: 2px dashed #a7c8ff; /* Lighter blue */
+            border-radius: 12px;
+            background-color: #e8f0fe; /* Very light blue */
+            padding: 40px 20px;
+            text-align: center;
+            color: #4285f4;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .drop-area.highlight {
+            background-color: #d2e3fc; /* Slightly darker light blue */
+        }
+        .copy-input-group {
+            display: flex;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #f9fafb;
+        }
+        .copy-input-group input {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: none;
+            outline: none;
+            background-color: transparent;
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+        .copy-input-group button {
+            background-color: #4285f4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+        .copy-input-group button:hover {
+            background-color: #357ae8;
+        }
+        .download-button {
+            background-color: #4285f4;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .download-button:hover {
+            background-color: #357ae8;
+            transform: translateY(-1px);
+        }
+        .message-box {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            z-index: 1000;
+            font-size: 0.9rem;
+        }
+        .message-box.show {
+            opacity: 1;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-button">Omnishare</div>
+
+        <div class="mb-8">
+            <h2 class="section-title">Upload a file to share</h2>
+            <div class="flex items-center mb-4">
+                <label for="expiry-select" class="text-gray-700 mr-2">Set file expiry :</label>
+                <select id="expiry-select" class="p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="15">15 minutes</option>
+                    <option value="60">1 hour</option>
+                    <option value="1440">1 day</option>
+                </select>
+            </div>
+
+            <div id="dropArea" class="drop-area mb-6">
+                Drag & drop files here or click to upload
+                <input type="file" id="fileInput" class="hidden" multiple>
+            </div>
+
+            <div id="uploadSuccessSection" class="hidden">
+                <div class="copy-input-group mb-4">
+                    <input type="text" id="shareLinkInput" value="https://omnishare.app/share/..." readonly>
+                    <button id="copyButton">Copy</button>
+                </div>
+                <p id="fileUploadStatus" class="text-green-600 text-sm font-medium mb-4">File uploaded successfully !</p>
+            </div>
+            <hr class="border-t border-gray-200 my-8">
+        </div>
+
+        <div>
+            <h2 class="section-title">Download a shared file</h2>
+            <div class="copy-input-group mb-4">
+                <input type="text" id="downloadLinkInput" value="https://omnishare.app/share/zszreaop6" readonly>
+            </div>
+            <button id="downloadButton" class="download-button w-full mb-6">Download</button>
+
+            <div id="downloadInfoSection" class="text-gray-700">
+                <p class="mb-1">File Name : <span id="downloadFileName" class="font-medium">example-file.txt</span></p>
+                <p class="mb-1">File Size : <span id="downloadFileSize" class="font-medium">1.2 MB</span></p>
+                <p>Expires In : <span id="downloadExpiresIn" class="font-medium">Expires in 15 minutes</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="messageBox" class="message-box"></div>
+
+    <script>
+        // Get elements
+        const dropArea = document.getElementById('dropArea');
+        const fileInput = document.getElementById('fileInput');
+        const shareLinkInput = document.getElementById('shareLinkInput');
+        const copyButton = document.getElementById('copyButton');
+        const uploadSuccessSection = document.getElementById('uploadSuccessSection');
+        const fileUploadStatus = document.getElementById('fileUploadStatus');
+        const messageBox = document.getElementById('messageBox');
+        const downloadButton = document.getElementById('downloadButton');
+        const downloadLinkInput = document.getElementById('downloadLinkInput');
+
+        // Simulate a file upload process
+        async function handleFiles(files) {
+            if (files.length === 0) return;
+
+            const file = files[0];
+            const expiryMinutes = parseInt(document.getElementById('expiry-select').value);
+            const expiryDate = new Date(Date.now() + expiryMinutes * 60000).toISOString();
+            const filePath = `${Date.now()}-${file.name}`;
+
+
+        // Show message box
+        function showMessage(message, duration = 3000) {
+            messageBox.textContent = message;
+            messageBox.classList.add('show');
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, duration);
+        }
+
+        // Handle file drop
+        dropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropArea.classList.add('highlight');
+        });
+
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('highlight');
+        });
+
+        dropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropArea.classList.remove('highlight');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFiles(files);
+            }
+        });
+
+        // Handle click to upload
+        dropArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const files = e.target.files;
+            if (files.length > 0) {
+                handleFiles(files);
+            }
+        });
+
+        // Process files
+        async function handleFiles(files) {
+            if (files.length === 0) return;
+
+            // Display a temporary message for uploading
+            fileUploadStatus.textContent = 'Uploading file...';
+            fileUploadStatus.classList.remove('text-green-600');
+            fileUploadStatus.classList.add('text-blue-600');
+            uploadSuccessSection.classList.remove('hidden');
+            shareLinkInput.value = 'Uploading...'; // Placeholder
+
+            const file = files[0]; // Assuming single file upload for simplicity based on image
+            try {
+                const result = await simulateFileUpload(file);
+                shareLinkInput.value = result.link;
+                fileUploadStatus.textContent = 'File uploaded successfully !';
+                fileUploadStatus.classList.remove('text-blue-600');
+                fileUploadStatus.classList.add('text-green-600');
+
+                // Update download section with mock data based on uploaded file
+                document.getElementById('downloadFileName').textContent = result.fileName;
+                document.getElementById('downloadFileSize').textContent = result.fileSize;
+                // Expiry is hardcoded for now, but could be dynamic
+                document.getElementById('downloadExpiresIn').textContent = `Expires in ${document.getElementById('expiry-select').value} minutes`;
+                downloadLinkInput.value = result.link;
+
+            } catch (error) {
+                fileUploadStatus.textContent = 'File upload failed.';
+                fileUploadStatus.classList.remove('text-green-600');
+                fileUploadStatus.classList.add('text-red-600');
+                showMessage('File upload failed. Please try again.', 5000);
+                console.error('Upload error:', error);
+            }
+        }
+         // Upload to Supabase Storage
+            const { data, error } = await supabase.storage.from('uploads').upload(filePath, file);
+                if (error) {
+                console.error('Upload error:', error);
+                 showMessage('File upload failed.');
+            return;
+        }
+
+        const { publicURL } = supabase.storage.from('uploads').getPublicUrl(filePath);
+
+        await supabase.from('files').insert([{
+                filename: file.name,
+            file_url: publicURL,
+                expiry: expiryDate
+        }]);
+
+        // Copy button functionality
+        copyButton.addEventListener('click', () => {
+            if (shareLinkInput.value && shareLinkInput.value !== 'Uploading...') {
+                // Use document.execCommand('copy') for better iframe compatibility
+                const tempInput = document.createElement('textarea');
+                tempInput.value = shareLinkInput.value;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                try {
+                    document.execCommand('copy');
+                    showMessage('Link copied to clipboard!');
+                } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                    showMessage('Failed to copy link. Please copy manually.', 5000);
+                }
+                document.body.removeChild(tempInput);
+            } else {
+                showMessage('Nothing to copy yet!', 3000);
+            }
+        });
+
+        // Download button functionality (simulated)
+        downloadButton.addEventListener('click', () => {
+            const link = downloadLinkInput.value;
+            if (link && link !== 'https://omnishare.app/share/...') {
+                showMessage('Simulating download of ' + document.getElementById('downloadFileName').textContent + '...');
+                // In a real application, you would initiate a file download here.
+                // For demonstration, we'll just log it.
+                console.log('Attempting to download:', link);
+                // You could open the link in a new tab for actual download if it were a real URL:
+                // window.open(link, '_blank');
+            } else {
+                showMessage('No file available for download.', 3000);
+            }
+        });
+
+        // Initial setup for download section based on mock data
+
+        shareLinkInput.value = publicURL;
+        fileUploadStatus.textContent = 'File uploaded successfully!';
+        uploadSuccessSection.classList.remove('hidden');
+
+        document.getElementById('downloadFileName').textContent = file.name;
+        document.getElementById('downloadFileSize').textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+        document.getElementById('downloadExpiresIn').textContent = `Expires in ${expiryMinutes} minutes`;
+        downloadLinkInput.value = publicURL;
+
+    }
+
+    </script>
+</body>
+</html>
