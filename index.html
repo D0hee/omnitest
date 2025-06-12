@@ -162,17 +162,6 @@
             // Here you would typically send this data to a server for authentication
             // For this example, we'll just show an alert.
             // In a real application, you'd integrate with a backend service.
-            const { data, error } = await supabase.auth.signUp({
-              email: email,
-              password: password,
-              options: {
-                data: { username: username }
-              }
-            });
-
-            if (error) {
-              alert('Registration failed: ' + error.message);
-              return;
             }
 
             alert('Registration successful! Please check your email to confirm your account.');
