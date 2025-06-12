@@ -158,6 +158,11 @@
             if (error) {
               alert('Registration failed: ' + error.message);
               return;
+                
+        signupLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            showForm(registerForm);
+        });
 
         // Function to handle login form submission
         async function handleLogin(event) {
