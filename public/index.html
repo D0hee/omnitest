@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniShare - Secure File Sharing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>OmniShare</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active" data-view="upload"><i class="fas fa-upload"></i> Upload</a></li>
+                    <li><a href="#" data-view="download"><i class="fas fa-download"></i> Download</a></li>
+                    <li><a href="#" data-view="history"><i class="fas fa-history"></i> History</a></li>
+                </ul>
+            </nav>
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">GU</div>
+                <div class="user-actions">
+                    <button class="btn btn-outline" id="loginBtn">Login</button>
+                    <button class="btn btn-primary" id="signupBtn">Sign Up</button>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section id="uploadView" class="view">
+                <div class="card main-card">
+                    <h1>Share Files with OmniShare</h1>
+                    <p class="file-types">Upload files and share them with anyone, anywhere</p>
+                    <div class="drop-area" id="dropArea"></div>
+                    <div id="filePreview" class="hidden"></div>
+                </div>
+            </section>
+
+            <section id="downloadView" class="view hidden">
+                <div class="card">
+                    <h2>Download Files</h2>
+                    <div class="form-group"></div>
+                    <button class="btn btn-primary" id="downloadBtn"></button>
+                    <div class="or-divider"></div>
+                    <h3>Check File Information</h3>
+                    <div class="form-group"></div>
+                    <button class="btn btn-outline" id="checkFileBtn"></button>
+                    <div id="fileInfoCard" class="card hidden" style="margin-top: 30px;"></div>
+                </div>
+            </section>
+
+            <section id="historyView" class="view hidden">
+                <div class="card">
+                    <div class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 20px;"></div>
+                    <div class="history-grid" id="historyList"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>OmniShare - Secure File Sharing Platform</p>
+            <p>© 2023 OmniShare. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="src/supabaseClient.js"></script>
+    <script src="src/utils.js"></script>
+    <script src="src/main.js"></script>
+</body>
+</html>
